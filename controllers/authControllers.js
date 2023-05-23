@@ -47,7 +47,6 @@ const loginUserController = async (req, res) => {
 const logoutUserController = async (req, res) => {
   const deviceId = req.cookies.device_Id;
   const { _id: id } = req.user;
-  console.log(id);
   try {
     await logoutUser(deviceId, id);
     res.clearCookie("tokenJWT");
