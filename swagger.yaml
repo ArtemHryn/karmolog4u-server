@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: Node.js + MongoDB API - JWT Authentication with Refresh Tokens
+  version: 1.0.0
+ 
+paths:
+  /auth/register:
+    post:
+      summary: Register user to db
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: "jason"
+                lastName:
+                  type: string
+                  example: "jo"
+                phone:
+                  type: string
+                  example: "+380988888787"
+                email:
+                  type: string
+                  example: "example@mail.com"
+                password:
+                  type: string
+                  example: "pass123"
+              required:
+                - firstName
+                - lastName
+                - phone
+                - email
+                - password
+      responses:
+        "201":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "successful"
+        "409":
+          description: User is already registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User is already registered"
+  /auth/login:
+    post:
+      summary: user login 
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "example@mail.com"
+                password:
+                  type: string
+                  example: "pass123"
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: successful login
+          headers:
+            Set-Cookie:
+              description: "`refreshToken`"
+              schema:
+                type: string
+                example: refreshToken=51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+              # description: "`tokenJWT`"
+              # schema:
+              #   type: string
+              #   example: tokenJWT=a5efedcf424db4cf5afd16a9d00ad25b743; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+              # description: "`device_Id`"
+              # schema:
+              #   type: string
+              #   example: device_Id=d00ad25b743a034c9c221afc85d18dcd5e4; Path=/;  HttpOnly
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "5eb12e197e06a76ccdefc121"
+                  firstName:
+                    type: string
+                    example: "Jason"
+                  lastName:
+                    type: string
+                    example: "Watmore"
+                  role:
+                    type: string
+                    example: "Admin"
+                  email:
+                    type: string
+                    example: "example@mail.com"
+                  phone:
+                    type: string
+                    example: "+380988877876"
+                  avatarUrl:
+                    type: string
+                    example: "https://url"
+                  banned:
+                    type: boolean
+                    example: false
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not found"
+        "401":
+          description: Incorrect password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Incorrect password"
+        #   headers:
+        #     Set-Cookie:
+        #       description: "`refreshToken`"
+        #       schema:
+        #         type: string
+        #         example: refreshToken=51872eca5efedcf424db4cf5afd16a9d00ad25b743a034c9c221afc85d18dcd5e4ad6e3f08607550; Path=/; Expires=Tue, 16 Jun 2020 09:14:17 GMT; HttpOnly
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: object
+        #         properties:
+        #           id:
+        #             type: string
+        #             example: "5eb12e197e06a76ccdefc121"
+        #           firstName:
+        #             type: string
+        #             example: "Jason"
+        #           lastName:
+        #             type: string
+        #             example: "Watmore"
+        #           username:
+        #             type: string
+        #             example: "jason"
+        #           role:
+        #             type: string
+        #             example: "Admin"
+        #           jwtToken:
+        #             type: string
+        #             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZWIxMmUxOTdlMDZhNzZjY2RlZmMxMjEiLCJpZCI6IjVlYjEyZTE5N2UwNmE3NmNjZGVmYzEyMSIsImlhdCI6MTU4ODc1ODE1N30.xR9H0STbFOpSkuGA9jHNZOJ6eS7umHHqKRhI807YT1Y"
+        # "400":
+        #   description: The username or password is incorrect
+        #   content:
+        #     application/json:
+        #       schema:
+        #         type: object
+        #         properties:
+        #           message:
+        #             type: string
+        #             example: "Username or password is incorrect"
